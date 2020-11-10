@@ -1,7 +1,7 @@
 [
     {
-        "q":"who is the prime minister of india",
-        "o":["narendra modi","indira ghandi","babu rajendra prasad","man mohan sing"],
+        "q":"ಆಹಾರವು ಮುಖ್ಯವಾಗಿ ಎಲ್ಲಿ ಜೀರ್ಣಕ್ರಿಯೆಗೆ ಒಳಗೊಳ್ಳುತ್ತದೆ ?",
+        "o":[" ಸಣ್ಣ ಕರುಳು"," ದೊಡ್ಡ ಕರುಳ"],
         "a":1,
         "u":0,
         "e":"from 2020 narendra modi is prime minister"
