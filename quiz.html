@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="https://enouplus.github.io/fonts/lato.css">
+    <link rel="stylesheet" href="quiz.css">
+    <script src="http://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+    <div id="e_appbar">
+        <button id="e_btn_prev" onclick="loadQuestion(current_question-1)">PREV</button>
+        <button><span id="e_score">0</span></button>
+        <button>HOME</button>
+        <button> <span id="e_qnumber"></span>/<span id="e_totol_questions">8/10</span></button>
+        <button id="e_btn_prev" onclick="loadQuestion(current_question+1)">NEXT</button>
+    </div>
+
+
+    <div id="e_quiz_panel">
+        <div id="e_quiz_question"></div>
+        <div id="e_quiz_options"></div>
+    </div>
+
+    <script>
+
+        const e_btn_next=document.getElementById("e_btn_next");
+        const e_btn_prev=document.getElementById("e_btn_prev");
+        const e_qnumber=document.getElementById("e_qnumber");
+        const e_totol_questions=document.getElementById("e_totol_questions");
+        const e_score=document.getElementById("e_score");
+        const e_quiz_question=document.getElementById("e_quiz_question");
+        const e_quiz_panel=document.getElementById("e_quiz_panel");
+        const e_quiz_options=document.getElementById("e_quiz_options");
+
+        var total_questions=0;
+        var current_question=1;
+        var score=0;
+
+        var json_array_questions=null;
+
+
+        function removeAllChildNodes(parent) 
+        {
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+        }
+
+        function loadJSONQuestions(url)
+        {
+            $.ajax
+            ({
+                url : url,
+                dataType : "json",
+                success : function(response)
+                {
+                    total_questions=response.length;
+                    if(total_questions>0)
+                    {
+                        e_totol_questions.innerText=total_questions;
+                        json_array_questions=response;
+                        loadQuestion(1);
+                    }
+                    else
+                    {
+                        alert("no questions found");
+                    }
+                    
+                },
+                error : function(jqXHR,textStatus,exception)
+                {
+                    alert("ERROR : "+exception);
+                }
+            });
+        }
+
+        function loadQuestion(question_number)
+        {
+            
+            if(question_number > total_questions)
+            {
+                //alert("you are at last question");
+            }
+            else if(question_number < 1)
+            {
+                //alert("you are at first question");
+            }
+            else
+            {
+                current_question=question_number;
+                e_qnumber.innerText=question_number;
+                $(e_quiz_panel).fadeOut(0);
+                removeAllChildNodes(e_quiz_options);
+                json_question=json_array_questions[question_number-1];
+                correct_answer=json_question["a"];
+                user_answer=json_question["u"];
+                if(user_answer==0)
+                {
+                    $(e_quiz_panel).fadeIn();
+                    e_quiz_question.innerHTML="("+question_number+") "+json_question["q"];
+                    var json_options=json_question["o"];
+                    for(var i=0;i<json_options.length;i++)
+                    {
+                        var option_id=i+1;
+                        var option_button=document.createElement("button");
+                        option_button.innerHTML=json_options[i];
+                        option_button.setAttribute("class","option");
+                        option_button.setAttribute("id","option_"+option_id);
+                        if(correct_answer==option_id)
+                        {
+                            option_button.setAttribute("data-true",true);
+                        }
+                        option_button.onclick=function()
+                        {
+                            window.navigator.vibrate(200);
+                            if(this.getAttribute("data-true"))
+                            {
+                                this.classList.add("e_true");
+                                score++;
+                                e_score.innerText=score;
+                            }
+                            else
+                            {
+                                document.getElementById("option_"+correct_answer).classList.add("e_true");
+                                this.classList.add("e_false");
+                            }
+                            $(".option").prop("disabled",true);
+                            json_array_questions[question_number-1]["u"]=this.getAttribute("id").substring(7);
+                            
+                            setTimeout(function()
+                            {
+                                loadQuestion(question_number+1);
+                            },1000);
+                        }
+                        e_quiz_options.appendChild(option_button);
+                    }
+                }
+                else
+                {
+                    //ELSE STARTS
+
+                    $(e_quiz_panel).fadeIn();
+                    e_quiz_question.innerHTML="("+question_number+") "+json_question["q"];
+                    var json_options=json_question["o"];
+                    for(var i=0;i<json_options.length;i++)
+                    {
+                        var option_id=i+1;
+                        var option_button=document.createElement("button");
+                        option_button.innerHTML=json_options[i];
+                        option_button.setAttribute("class","option");
+                        option_button.setAttribute("id","option_"+option_id);
+                        e_quiz_options.appendChild(option_button);
+                    }
+                    if(user_answer==correct_answer)
+                    {
+                        document.getElementById("option_"+correct_answer).classList.add("e_true");
+                    }
+                    else
+                    {
+                        document.getElementById("option_"+correct_answer).classList.add("e_true");
+                        document.getElementById("option_"+user_answer).classList.add("e_false");
+                    }
+                    //ELSE ENDS
+                }
+                
+
+            }     
+        }
+
+        
+        let searchParams = new URLSearchParams(window.location.search);
+        if(searchParams.has("url"))
+        {
+            loadJSONQuestions(searchParams.get('url'));
+        }
+        else
+        {
+            alert("quiz url not sent");
+        }
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
