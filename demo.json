@@ -1,0 +1,30 @@
+[
+    {
+        "q":"who is the prime minister of india",
+        "o":["narendra modi","indira ghandi","babu rajendra prasad","man mohan sing"],
+        "a":1,
+        "u":0,
+        "e":"from 2020 narendra modi is prime minister"
+    },
+    {
+        "q":"who is not prime minister of india",
+        "o":["narendra modi","indira ghandi","rahul gandi","man mohan sing"],
+        "a":3,
+        "u":0,
+        "e":"from 2020 narendra modi is prime minister"
+    },
+    {
+        "q":"who is old prime minister of india",
+        "o":["narendra modi","indira ghandi","babu rajendra prasad","man mohan sing"],
+        "a":4,
+        "u":0,
+        "e":"from 2020 narendra modi is prime minister"
+    },
+    {
+        "q":"who is next prime minister of india",
+        "o":["narendra modi","Raghavendra K J","babu rajendra prasad","man mohan sing"],
+        "a":2,
+        "u":0,
+        "e":"from 2020 narendra modi is prime minister"
+    }
+]
